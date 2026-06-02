@@ -1,37 +1,46 @@
 {
-  "name": "dualclock",
-  "main": "expo-router/entry",
-  "version": "1.0.0",
+  "name": "dualtime",
+  "description": "DualTime — 12-hour and 24-hour local time for operators who switch formats (Atley LLC)",
+  "main": "index.ts",
+  "version": "0.1.1",
+  "private": true,
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "start:clear": "expo start --clear",
+    "android": "CI=1 expo run:android --port 8082",
+    "android:devices": "node scripts/adb-devices.cjs",
+    "android:install:debug": "node scripts/adb-install-debug.cjs",
+    "android:launch": "node scripts/adb-launch.cjs",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "build:web": "expo export --platform web",
+    "build:web:pages": "EXPO_BASE_URL=/dualtime expo export --platform web",
+    "prebuild:android": "expo prebuild --platform android --non-interactive && node scripts/setup-android-local.cjs",
+    "setup:android": "node scripts/setup-android-local.cjs",
+    "build:android:beta": "node scripts/build-android-beta.cjs",
+    "build:android:release": "npm run build:android:beta",
+    "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@expo/vector-icons": "^15.0.3",
-    "@react-navigation/native": "^7.1.8",
+    "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "~54.0.34",
     "expo-constants": "~18.0.13",
-    "expo-font": "~14.0.11",
     "expo-linking": "~8.0.12",
     "expo-router": "~6.0.23",
     "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",
-    "expo-web-browser": "~15.0.11",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.5",
-    "react-native-worklets": "0.5.1",
+    "react-native-android-widget": "^0.20.1",
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
-    "react-native-web": "~0.21.0"
+    "react-native-web": "~0.21.0",
+    "react-native-worklets": "0.5.1"
   },
   "devDependencies": {
     "@types/react": "~19.1.0",
-    "react-test-renderer": "19.1.0",
     "typescript": "~5.9.2"
-  },
-  "private": true
+  }
 }

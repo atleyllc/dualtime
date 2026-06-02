@@ -1,0 +1,206 @@
+# Tag-driven DualTime release: web artifact + GitHub Pages + Android APK + GitHub Release.
+
+name: Release DualTime
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-dualtime
+  cancel-in-progress: false
+
+jobs:
+  build-web:
+    name: Build web
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare release notes
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if [ -f "RELEASE_NOTES_v${VERSION}.md" ]; then
+            cp "RELEASE_NOTES_v${VERSION}.md" release-notes-body.md
+          elif [ -f "release/v${VERSION}-notes.md" ]; then
+            cp "release/v${VERSION}-notes.md" release-notes-body.md
+          else
+            cp RELEASE_TEMPLATE.md release-notes-body.md
+            sed -i "s/v0.0.0/v${VERSION}/g" release-notes-body.md
+            sed -i "s/0.0.0/${VERSION}/g" release-notes-body.md
+          fi
+          echo "---" >> release-notes-body.md
+          echo "" >> release-notes-body.md
+          echo "**DualTime** · Web: https://atleyllc.github.io/dualtime/" >> release-notes-body.md
+          echo "" >> release-notes-body.md
+          echo "**Tag:** \`${GITHUB_REF_NAME}\`" >> release-notes-body.md
+
+      - name: Upload release notes artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-notes
+          path: release-notes-body.md
+
+      - name: Build web (GitHub Pages)
+        run: npm run build:web:pages
+        env:
+          EXPO_BASE_URL: /dualtime
+
+      - name: Prepare Pages artifact
+        run: touch dist/.nojekyll
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy-pages:
+    name: Deploy GitHub Pages
+    needs: build-web
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      apk_filename: ${{ steps.apk.outputs.filename }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Prebuild Android
+        run: npx expo prebuild --platform android --non-interactive
+
+      - name: Configure Android Gradle
+        run: node scripts/setup-android-local.cjs
+
+      - name: Generate debug keystore for CI signing
+        run: |
+          keytool -genkeypair -v \
+            -storetype PKCS12 \
+            -keystore android/app/debug.keystore \
+            -alias androiddebugkey \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass android -keypass android \
+            -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Build Android APK (standalone beta)
+        id: apk
+        run: |
+          chmod +x android/gradlew
+          VERSION="${{ steps.version.outputs.version }}"
+          cd android
+          ./gradlew assembleRelease --no-daemon --stacktrace
+          cd ..
+          SRC="android/app/build/outputs/apk/release/app-release.apk"
+          if [ ! -f "$SRC" ]; then
+            echo "::error::No release APK at $SRC"
+            exit 1
+          fi
+          DEST="DualTime-v${VERSION}.apk"
+          mkdir -p "releases/v${VERSION}"
+          cp "$SRC" "$DEST"
+          cp "$SRC" "releases/v${VERSION}/${DEST}"
+          echo "filename=$DEST" >> "$GITHUB_OUTPUT"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: DualTime-v*.apk
+
+  publish-release:
+    name: Publish GitHub Release
+    needs: build-android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK
+        uses: actions/download-artifact@v4
+        with:
+          name: android-apk
+          path: release-assets
+
+      - name: Download release notes
+        uses: actions/download-artifact@v4
+        with:
+          name: release-notes
+          path: .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: DualTime ${{ github.ref_name }}
+          body_path: release-notes-body.md
+          draft: false
+          prerelease: false
+          files: release-assets/*
+          generate_release_notes: false
