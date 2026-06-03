@@ -1,21 +1,19 @@
+import { type Href, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BrandFooter } from '@/src/components/BrandFooter';
 import { ClockBlock } from '@/src/components/ClockBlock';
-import { WidgetBackgroundOption } from '@/src/components/WidgetBackgroundOption';
 import { useLiveClock } from '@/src/hooks/useLiveClock';
-import { useWidgetPreferences } from '@/src/hooks/useWidgetPreferences';
 import { formatDateSubtle, formatTime12, formatTime24 } from '@/src/time/format';
 import { colors } from '@/src/theme/colors';
 import { spacing } from '@/src/theme/spacing';
 
 export function DashboardScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const now = useLiveClock();
-  const { transparentBackground, setTransparentBackground, showWidgetOptions, loaded } =
-    useWidgetPreferences(now);
 
   return (
     <View
@@ -43,11 +41,15 @@ export function DashboardScreen() {
       </View>
 
       <View style={styles.footer}>
-        {showWidgetOptions && loaded ? (
-          <WidgetBackgroundOption
-            transparent={transparentBackground}
-            onChange={setTransparentBackground}
-          />
+        {Platform.OS === 'android' ? (
+          <Pressable
+            style={styles.settingsLink}
+            onPress={() => router.push('/settings' as Href)}
+            accessibilityRole="button"
+            accessibilityLabel="Widget settings"
+          >
+            <Text style={styles.settingsLinkText}>Widget settings</Text>
+          </Pressable>
         ) : null}
         <BrandFooter />
       </View>
@@ -100,5 +102,20 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingTop: spacing.sm,
+    alignItems: 'center',
+  },
+  settingsLink: {
+    marginBottom: spacing.md,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  settingsLinkText: {
+    color: colors.textPrimary,
+    fontSize: 14,
+    fontWeight: '600',
   },
 });

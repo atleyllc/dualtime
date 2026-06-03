@@ -2,7 +2,7 @@
   "name": "dualtime",
   "description": "DualTime — 12-hour and 24-hour local time for operators who switch formats (Atley LLC)",
   "main": "index.ts",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "start": "expo start",
@@ -15,7 +15,7 @@
     "web": "expo start --web",
     "build:web": "expo export --platform web",
     "build:web:pages": "EXPO_BASE_URL=/dualtime expo export --platform web",
-    "prebuild:android": "expo prebuild --platform android --non-interactive && node scripts/setup-android-local.cjs",
+    "prebuild:android": "expo prebuild --platform android --non-interactive && node scripts/apply-native-widget.cjs && node scripts/setup-android-local.cjs",
     "setup:android": "node scripts/setup-android-local.cjs",
     "build:android:beta": "node scripts/build-android-beta.cjs",
     "build:android:release": "npm run build:android:beta",

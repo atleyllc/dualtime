@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingHorizontal="8dp"
+    android:paddingVertical="6dp"
+    android:background="@drawable/widget_surface_background">
+
+    <!-- 24-hour (largest, near-white) -->
+    <TextClock
+        android:id="@+id/time_24"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="40"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="center"
+        android:format12Hour="HH:mm"
+        android:format24Hour="HH:mm"
+        android:textColor="@color/widget_text_primary"
+        android:includeFontPadding="false"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="18sp"
+        android:autoSizeMaxTextSize="52sp"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <!-- Date (smallest, muted white) -->
+    <TextView
+        android:id="@+id/date_line"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="17"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="center"
+        android:text="Tue, Jun 2"
+        android:textColor="@color/widget_text_muted"
+        android:includeFontPadding="false"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="7sp"
+        android:autoSizeMaxTextSize="12sp"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <!-- 12-hour (medium, near-white) -->
+    <TextClock
+        android:id="@+id/time_12"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="32"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="center"
+        android:format12Hour="h:mm a"
+        android:format24Hour="h:mm a"
+        android:textColor="@color/widget_text_body"
+        android:includeFontPadding="false"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="14sp"
+        android:autoSizeMaxTextSize="40sp"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+</LinearLayout>

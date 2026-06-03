@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Weather-widget style: dark translucent card (~75% opacity), wallpaper shows through -->
+    <color name="widget_weather_surface">#BF1A1D21</color>
+    <color name="widget_weather_surface_light">#CCE8EAED</color>
+
+    <!-- Dark card text -->
+    <color name="widget_text_primary">#F5F7FA</color>
+    <color name="widget_text_body">#E3E8EE</color>
+    <color name="widget_text_muted">#B8C1CC</color>
+
+    <!-- Light card text -->
+    <color name="widget_text_primary_on_light">#1A1D21</color>
+    <color name="widget_text_body_on_light">#2D3238</color>
+    <color name="widget_text_muted_on_light">#5C6570</color>
+</resources>

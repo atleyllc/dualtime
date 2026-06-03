@@ -1,4 +1,4 @@
-/** Toggle seconds on clock displays (app + widget). */
+/** Toggle seconds on the in-app dashboard clocks only. */
 export const DISPLAY_SECONDS = true;
 
 const time12Base: Intl.DateTimeFormatOptions = {
@@ -34,6 +34,17 @@ export function formatTime12(date: Date, showSeconds = DISPLAY_SECONDS): string 
 
 export function formatTime24(date: Date, showSeconds = DISPLAY_SECONDS): string {
   return date.toLocaleTimeString(undefined, withSeconds(time24Base, showSeconds));
+}
+
+/** Widget display via native TextClock in layout XML (kept for previews/tests). */
+export function formatWidgetTime12(date: Date): string {
+  const value = date.toLocaleTimeString(undefined, time12Base);
+  return value && value.trim().length > 0 ? value : '--:-- --';
+}
+
+export function formatWidgetTime24(date: Date): string {
+  const value = date.toLocaleTimeString(undefined, time24Base);
+  return value && value.trim().length > 0 ? value : '--:--';
 }
 
 /** Short date for subtle dashboard footer area */

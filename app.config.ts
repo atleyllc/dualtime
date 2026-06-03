@@ -6,14 +6,15 @@ const widgetConfig: WithAndroidWidgetsParams = {
     {
       name: 'DualTime',
       label: 'DualTime',
-      description: '12-hour and 24-hour local time at a glance',
-      minWidth: '250dp',
+      description: '24-hour time · date · 12-hour time (2×2 clock dashboard)',
+      minWidth: '110dp',
       minHeight: '110dp',
-      targetCellWidth: 4,
+      targetCellWidth: 2,
       targetCellHeight: 2,
       previewImage: './assets/images/widget-preview.png',
       resizeMode: 'horizontal|vertical',
-      updatePeriodMillis: 1_800_000,
+      // Native AlarmManager handles updates; 0 disables periodic AppWidgetManager polling.
+      updatePeriodMillis: 0,
     },
   ],
 };
@@ -22,9 +23,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: 'DualTime',
   slug: 'dualtime',
-  version: '0.1.1',
+  version: '0.2.0',
   orientation: 'portrait',
-  icon: './assets/images/icon.png',
+  icon: './assets/icon.png',
   scheme: 'dualtime',
   userInterfaceStyle: 'dark',
   newArchEnabled: true,
@@ -40,7 +41,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: 'com.atleyllc.dualtime',
     adaptiveIcon: {
-      foregroundImage: './assets/images/adaptive-icon.png',
+      foregroundImage: './assets/icon.png',
       backgroundColor: '#0B0F14',
     },
     edgeToEdgeEnabled: true,
@@ -51,7 +52,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     output: 'static',
     favicon: './assets/images/favicon.png',
   },
-  plugins: ['expo-router', ['react-native-android-widget', widgetConfig]],
+  plugins: [
+    'expo-router',
+    ['react-native-android-widget', widgetConfig],
+    './plugins/withDualTimeWidgetAlarm.cjs',
+  ],
   experiments: {
     typedRoutes: true,
   },

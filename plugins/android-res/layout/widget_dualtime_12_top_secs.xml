@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingHorizontal="8dp"
+    android:paddingVertical="6dp"
+    android:background="@drawable/widget_surface_background">
+
+    <TextClock
+        android:id="@+id/time_12"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="40"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="center"
+        android:format12Hour="h:mm:ss a"
+        android:format24Hour="h:mm:ss a"
+        android:textColor="@color/widget_text_primary"
+        android:includeFontPadding="false"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="16sp"
+        android:autoSizeMaxTextSize="48sp"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/date_line"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="17"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="center"
+        android:text="Tue, Jun 2"
+        android:textColor="@color/widget_text_muted"
+        android:includeFontPadding="false"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="7sp"
+        android:autoSizeMaxTextSize="12sp"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <TextClock
+        android:id="@+id/time_24"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="32"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="center"
+        android:format12Hour="HH:mm:ss"
+        android:format24Hour="HH:mm:ss"
+        android:textColor="@color/widget_text_body"
+        android:includeFontPadding="false"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="36sp"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+</LinearLayout>
