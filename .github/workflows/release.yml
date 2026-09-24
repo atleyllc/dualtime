@@ -152,6 +152,10 @@ jobs:
 
       - name: Generate debug keystore for CI signing
         run: |
+          if [ -f android/app/debug.keystore ]; then
+            echo "debug.keystore already present from prebuild"
+            exit 0
+          fi
           keytool -genkeypair -v \
             -storetype PKCS12 \
             -keystore android/app/debug.keystore \
