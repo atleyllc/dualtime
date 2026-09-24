@@ -2,7 +2,7 @@
   "name": "dualtime",
   "description": "DualTime — 12-hour and 24-hour local time for operators who switch formats (Atley LLC)",
   "main": "index.ts",
-  "version": "0.2.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "start": "expo start",

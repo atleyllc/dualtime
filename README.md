@@ -1,21 +1,23 @@
 # DualTime
 
-**DualTime** by [Atley LLC](https://github.com/atleyllc) — see local time in **12-hour** and **24-hour** formats at once.
+**DualTime** by [Atley LLC](https://atley.llc) — see local time in **12-hour** and **24-hour** formats at once.
 
 Built for ham radio operators, pilots, military personnel, event production crews, and anyone who regularly switches between civilian and military time.
 
 | | |
 |---|---|
-| **Version** | 0.1.0 |
+| **Version** | 1.1.0 |
 | **Web** | https://atleyllc.github.io/dualtime/ |
+| **Company** | https://atley.llc |
 | **Releases** | https://github.com/atleyllc/dualtime/releases |
 
-## Features (v0.1.0)
+## Features (v1.1.0)
 
 - Large 12-hour and 24-hour clocks on one dashboard
 - Live updates every second
 - Current date below the clocks
-- Dark minimalist UI
+- Dark UI with the gold Atley 12/24 clock logo
+- **Atley LLC** button at the bottom opens https://atley.llc
 - **Android home screen widget** with both formats (requires dev build or release APK)
 
 ## Quick start
@@ -47,8 +49,8 @@ Tag-driven releases publish GitHub Pages, a standalone Android APK, and a GitHub
 See [docs/RELEASE_WORKFLOW.md](./docs/RELEASE_WORKFLOW.md).
 
 ```bash
-git tag -a v0.1.0 -m "DualTime v0.1.0"
-git push origin v0.1.0
+git tag -a v1.1.0 -m "DualTime v1.1.0"
+git push origin v1.1.0
 ```
 
 ## Project structure
