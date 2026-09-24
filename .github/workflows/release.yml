@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
+      pages: ${{ steps.pages.outcome }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -77,11 +78,14 @@ jobs:
         run: touch dist/.nojekyll
 
       - name: Configure GitHub Pages
+        id: pages
+        continue-on-error: true
         uses: actions/configure-pages@v5
         with:
           enablement: true
 
       - name: Upload Pages artifact
+        if: steps.pages.outcome == 'success'
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -89,6 +93,7 @@ jobs:
   deploy-pages:
     name: Deploy GitHub Pages
     needs: build-web
+    if: needs.build-web.outputs.pages == 'success'
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -145,7 +150,7 @@ jobs:
           printf '%s\n' 84831b9409646161da1b5aa2c2f1e4b0 > "$SDK_ROOT/licenses/android-sdk-preview-license"
 
       - name: Prebuild Android
-        run: npx expo prebuild --platform android --non-interactive
+        run: npx expo prebuild --platform android --non-interactive && node scripts/apply-native-widget.cjs
 
       - name: Configure Android Gradle
         run: node scripts/setup-android-local.cjs
