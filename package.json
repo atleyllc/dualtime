@@ -19,7 +19,8 @@
     "setup:android": "node scripts/setup-android-local.cjs",
     "build:android:beta": "node scripts/build-android-beta.cjs",
     "build:android:release": "npm run build:android:beta",
-    "verify": "tsc --noEmit"
+    "test": "node --test \"src/**/*.test.ts\"",
+    "verify": "tsc --noEmit && npm test"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -40,6 +41,7 @@
     "react-native-worklets": "0.5.1"
   },
   "devDependencies": {
+    "@types/node": "~25.9.1",
     "@types/react": "~19.1.0",
     "typescript": "~5.9.2"
   }
